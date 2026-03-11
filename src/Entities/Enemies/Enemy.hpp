@@ -22,6 +22,7 @@ class Enemy {
         inline static float direction = 0.5;
         inline static int directionChange = 100;
         inline static std::vector<std::pair<std::pair<float, float>, Enemy*>> enemies;
+        inline static int pointsEarned = 0;
 
         Enemy() {}
 
@@ -45,6 +46,7 @@ class Enemy {
         }
 
         static void ManageEnemies(HitBox target) {
+            //int earnedScore = 0;
             for (std::pair<std::pair<float, float>, Enemy*>& p : Enemy::enemies) {
                 p.first.first += (p.first.first == 0) ? 0 : direction;
                 if (p.second) {
@@ -58,6 +60,7 @@ class Enemy {
                     }
 
                     if (p.second->health <= 0) {
+                        Enemy::pointsEarned += 100;
                         Animation::animations.push_back(
                             Animation(p.second->position.first, p.second->position.second, 155, 0, 33, 33, 30, 30, 4, ImageManager::SpriteSheet)
                         );
@@ -70,6 +73,7 @@ class Enemy {
                 if ((Enemy::enemies[i].second && Enemy::enemies[i].second->position.first <= -30) || 
                     (!Enemy::enemies[i].second && Enemy::enemies[i].first.first == 0 && Enemy::enemies[i].first.second == 0)) {
                     Enemy::enemies.erase(Enemy::enemies.begin() + i);
+                    i--;
                 }
             }
 
