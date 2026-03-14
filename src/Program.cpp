@@ -28,6 +28,7 @@ Program::Program() {
 }
 
 void Program::Update() {
+    UpdateMusicStream(SoundManager::bgMusic); //Bonus: updating the music stream to prevent it from cutting out after a while.
     for (Animation& a : Animation::animations) a.update();
     for (int i = 0; i < Animation::animations.size(); i++) {
         if (Animation::animations[i].done) Animation::animations.erase(Animation::animations.begin() + i);

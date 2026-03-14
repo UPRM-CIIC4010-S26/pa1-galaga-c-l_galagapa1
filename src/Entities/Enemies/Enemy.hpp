@@ -4,6 +4,7 @@
 #include "ImageManager.hpp"
 #include "Animation.hpp"
 #include <iostream>
+#include "SoundManager.hpp" //including the SoundManager header to play sounds when enemies are hit or destroyed.
 
 class Enemy {
     protected:
@@ -46,6 +47,7 @@ class Enemy {
         }
 
         static void ManageEnemies(HitBox target) {
+            TraceLog(LOG_INFO, "ManageEnemies called");
             //int earnedScore = 0;
             for (std::pair<std::pair<float, float>, Enemy*>& p : Enemy::enemies) {
                 p.first.first += (p.first.first == 0) ? 0 : direction;
@@ -54,8 +56,19 @@ class Enemy {
 
                     for (Projectile& p2 : Projectile::projectiles) {
                         if (p2.ID != 1 && HitBox::Collision(p.second->hitBox, p2.getHitBox())) {
+                            TraceLog(LOG_INFO, "Enemy hit!");
                             p.second->health--;
                             p2.del = true;
+                            TraceLog(LOG_INFO, "Hit detected, health: %d", p.second->health);
+                        //Playing the hit or dead sound when enemy loses health or reaches zero.
+                            if (p.second->health <= 0) {
+                                StopSound(SoundManager::dead);
+                                PlaySound(SoundManager::dead);
+                            } else {
+                                StopSound(SoundManager::hit);
+                                PlaySound(SoundManager::hit);
+                            }
+                            break;
                         }
                     }
 
